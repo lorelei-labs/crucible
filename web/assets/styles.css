@@ -1,0 +1,593 @@
+/* ============================================================================
+   Lorelei's Workshop — design system stylesheet
+   Single source of truth for tokens, type, layout, and components.
+   See DESIGN_SYSTEM.md for the intent behind every choice.
+   ============================================================================ */
+
+/* ---------- 1. Tokens ----------------------------------------------------- */
+
+:root {
+  /* Color */
+  --ll-bg:           #10202c;
+  --ll-bg-deep:      #0a1722;                      /* used inside the wave-divider ornament gap */
+  --ll-surface:      rgba(255, 255, 255, 0.05);
+  --ll-surface-deep: rgba(0, 0, 0, 0.22);          /* plate / image holder backgrounds */
+  --ll-border:       rgba(255, 255, 255, 0.18);
+  --ll-accent:       #9dd9cb;                      /* seafoam pearl */
+  --ll-accent-2:     #e8b6c6;                      /* shell pink */
+  --ll-accent-dim:   rgba(157, 217, 203, 0.40);
+  --ll-accent-2-bg:  rgba(232, 182, 198, 0.14);
+  --ll-accent-bg:    rgba(157, 217, 203, 0.14);
+  --ll-pill-bg:      rgba(255, 255, 255, 0.09);
+  --ll-text:         #ffffff;
+  --ll-mute:         rgba(255, 255, 255, 0.62);
+  --ll-very-mute:    rgba(255, 255, 255, 0.32);
+
+  /* Type */
+  --ll-font-display: "Cormorant Garamond", "Garamond", serif;
+  --ll-font-body:    "Cormorant Garamond", "Garamond", serif;
+  --ll-font-meta:    "Special Elite", "Courier New", monospace;
+  --ll-font-mono:    "IBM Plex Mono", "Menlo", monospace;
+
+  /* Radii — never sharp */
+  --ll-radius-pill: 999px;
+  --ll-radius-lg:   22px;
+  --ll-radius-md:   18px;
+  --ll-radius-sm:   14px;
+
+  /* Layout */
+  --ll-page-pad-x:  60px;
+  --ll-content-max: 1280px;
+}
+
+@media (max-width: 720px) {
+  :root { --ll-page-pad-x: 22px; }
+}
+
+/* ---------- 2. Reset & page ---------------------------------------------- */
+
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--ll-bg);
+  color: var(--ll-text);
+  font-family: var(--ll-font-body);
+  font-style: italic;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+img { max-width: 100%; display: block; }
+
+a {
+  color: var(--ll-accent);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 200ms ease, color 200ms ease;
+}
+a:hover { border-bottom-color: var(--ll-accent); }
+
+/* Body background atmosphere — three soft radial washes + a noise overlay.
+   Pure decoration, sits below all content. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(circle at -10% -10%, rgba(157, 217, 203, 0.18) 0%, transparent 55%),
+    radial-gradient(circle at 110% 115%, rgba(232, 182, 198, 0.14) 0%, transparent 55%),
+    radial-gradient(circle at 90% 35%, rgba(232, 182, 198, 0.10) 0%, transparent 55%);
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.12;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence baseFrequency='0.9' numOctaves='2'/></filter><rect width='240' height='240' filter='url(%23n)' opacity='0.35'/></svg>");
+}
+
+/* Layer all real content above the atmosphere. */
+.ll-page { position: relative; z-index: 1; }
+
+.ll-container {
+  max-width: var(--ll-content-max);
+  margin: 0 auto;
+  padding: 0 var(--ll-page-pad-x);
+}
+
+/* ---------- 3. Typography utilities -------------------------------------- */
+
+/* Cormorant italic — the default voice. */
+.ll-display-1,
+.ll-display-2,
+.ll-display-3 {
+  font-family: var(--ll-font-display);
+  font-style: italic;
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  line-height: 0.88;
+  margin: 0;
+  text-shadow: 0 0 28px var(--ll-accent-dim);
+}
+.ll-display-1 { font-size: clamp(64px, 11vw, 144px); }
+.ll-display-2 { font-size: clamp(48px, 9vw, 120px); }
+.ll-display-3 { font-size: clamp(40px, 6vw, 76px); }
+
+.ll-title {
+  font-family: var(--ll-font-display);
+  font-style: italic;
+  font-weight: 500;
+  font-size: clamp(28px, 3.4vw, 44px);
+  line-height: 0.96;
+  letter-spacing: -0.005em;
+  margin: 0;
+}
+
+.ll-subtitle {
+  font-family: var(--ll-font-display);
+  font-style: italic;
+  font-weight: 500;
+  font-size: clamp(26px, 3vw, 38px);
+  line-height: 0.96;
+  letter-spacing: -0.005em;
+  margin: 0;
+}
+
+.ll-lead {
+  font-family: var(--ll-font-body);
+  font-style: italic;
+  font-size: clamp(20px, 2vw, 23px);
+  line-height: 1.45;
+  margin: 0;
+}
+
+.ll-body {
+  font-family: var(--ll-font-body);
+  font-style: italic;
+  font-size: clamp(17px, 1.4vw, 18px);
+  line-height: 1.55;
+  margin: 0;
+}
+
+.ll-caption {
+  font-family: var(--ll-font-display);
+  font-style: italic;
+  font-weight: 500;
+  font-size: clamp(15px, 1.4vw, 17px);
+  line-height: 1.3;
+  color: var(--ll-mute);
+  margin: 0;
+}
+
+/* Special Elite — meta labels, all-caps, wide-tracked.
+   Wrap label text in middle-dots: "· APPARATUS · IV ·" */
+.ll-meta {
+  font-family: var(--ll-font-meta);
+  font-style: normal;
+  font-size: 11px;
+  letter-spacing: 0.24em;
+  color: var(--ll-mute);
+  text-transform: uppercase;
+  line-height: 1;
+}
+.ll-meta--lg   { font-size: 13px; letter-spacing: 0.20em; }
+.ll-meta--xs   { font-size: 10px; letter-spacing: 0.20em; color: var(--ll-very-mute); }
+
+/* IBM Plex Mono — tags, file paths, numeric strings */
+.ll-mono {
+  font-family: var(--ll-font-mono);
+  font-style: normal;
+  font-size: 12px;
+  letter-spacing: 0.10em;
+  color: var(--ll-mute);
+}
+
+/* Color helpers */
+.ll-c-accent   { color: var(--ll-accent); }
+.ll-c-accent-2 { color: var(--ll-accent-2); }
+.ll-c-mute     { color: var(--ll-mute); }
+.ll-c-very-mute{ color: var(--ll-very-mute); }
+.ll-roman      { font-style: normal; }
+
+/* Stylized "&" mark — accent-colored, italic Cormorant */
+.ll-amp {
+  color: var(--ll-accent);
+  font-family: var(--ll-font-display);
+  font-style: italic;
+  font-weight: 500;
+}
+
+/* ---------- 4. Masthead -------------------------------------------------- */
+
+.ll-masthead {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 24px;
+  padding-top: 44px;
+}
+
+.ll-masthead__title-meta { margin-bottom: 12px; }
+
+.ll-masthead__tagline {
+  margin-top: 8px;
+  color: var(--ll-mute);
+}
+
+.ll-masthead__right {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 14px;
+}
+
+.ll-nav {
+  font-family: var(--ll-font-display);
+  font-style: italic;
+  font-weight: 500;
+  font-size: 17px;
+  line-height: 2;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  text-align: right;
+}
+.ll-nav a { color: var(--ll-text); border-bottom: none; }
+.ll-nav a:hover { color: var(--ll-accent); }
+
+@media (max-width: 720px) {
+  .ll-masthead { flex-direction: column; align-items: flex-start; }
+  .ll-masthead__right { align-items: flex-start; text-align: left; }
+  .ll-nav { text-align: left; line-height: 1.6; }
+}
+
+/* ---------- 5. Wave divider --------------------------------------------- */
+/* Two SVG paths stacked with phase offset, plus an optional small ring + dot
+   ornament in the middle. Mounted by components.js into elements marked
+   <div class="ll-wave-divider"></div> or rendered inline in HTML. */
+
+.ll-wave-divider {
+  width: 100%;
+  display: block;
+  margin: 30px 0;
+}
+.ll-wave-divider svg { display: block; width: 100%; height: auto; }
+
+.ll-wave-divider--slim { margin: 14px 0; }
+
+/* The mini wave used inside cards as a flourish. */
+.ll-mini-wave {
+  display: block;
+  margin: 10px 0 8px;
+}
+.ll-mini-wave svg { display: block; }
+
+/* ---------- 6. Manifesto ------------------------------------------------- */
+
+.ll-manifesto {
+  text-align: center;
+  padding: 26px 0 0;
+}
+
+.ll-manifesto .ll-display-3,
+.ll-manifesto .ll-lead {
+  max-width: 880px;
+  margin: 0 auto;
+  text-shadow: none;
+}
+
+.ll-manifesto .ll-pull {
+  font-family: var(--ll-font-display);
+  font-style: italic;
+  font-weight: 500;
+  font-size: clamp(22px, 2.6vw, 30px);
+  line-height: 1.25;
+  letter-spacing: 0.005em;
+  margin: 0 auto;
+  max-width: 880px;
+}
+
+/* ---------- 7. Legend (the little symbol key) ---------------------------- */
+
+.ll-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 28px;
+  justify-content: center;
+  padding: 38px 0 0;
+  font-family: var(--ll-font-display);
+  font-style: italic;
+  font-size: 16px;
+  color: var(--ll-mute);
+}
+
+.ll-legend__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ---------- 8. Icon badge ------------------------------------------------ */
+
+.ll-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--ll-accent-bg);
+  color: var(--ll-accent);
+  font-style: normal;
+  font-size: 16px;
+  line-height: 1;
+  flex: 0 0 auto;
+}
+.ll-badge--sm { width: 26px; height: 26px; font-size: 14px; }
+.ll-badge--xs { width: 22px; height: 22px; font-size: 12px; }
+
+/* ---------- 9. Project cards -------------------------------------------- */
+
+.ll-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+  padding: 30px 0;
+}
+@media (max-width: 960px) { .ll-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 640px) { .ll-grid { grid-template-columns: 1fr; gap: 14px; } }
+
+.ll-card {
+  position: relative;
+  background: var(--ll-surface);
+  border: 1px solid var(--ll-border);
+  border-radius: var(--ll-radius-lg);
+  padding: 18px 20px 16px;
+  box-shadow: 0 6px 28px -20px rgba(0, 0, 0, 0.6);
+  transition: border-color 200ms ease, box-shadow 200ms ease;
+}
+.ll-card:hover { border-color: rgba(255, 255, 255, 0.32); }
+
+.ll-card--hot {
+  box-shadow: 0 0 0 1px var(--ll-accent), 0 0 36px -10px var(--ll-accent);
+  animation: ll-breathing 5s ease-in-out infinite;
+}
+@keyframes ll-breathing {
+  0%, 100% { box-shadow: 0 0 0 1px var(--ll-accent), 0 0 36px -10px var(--ll-accent); }
+  50%      { box-shadow: 0 0 0 1px var(--ll-accent), 0 0 56px -8px var(--ll-accent); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ll-card--hot { animation: none; }
+}
+
+.ll-card__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.ll-card__lead {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.ll-card__title {
+  margin-top: 12px;
+}
+
+.ll-card__sub {
+  margin-top: 2px;
+  color: var(--ll-mute);
+}
+
+/* Whole card clickable */
+.ll-card-link {
+  color: inherit;
+  border-bottom: none;
+  display: block;
+}
+.ll-card-link:hover { border-bottom: none; }
+.ll-card-link:hover .ll-card { border-color: var(--ll-accent-dim); }
+
+/* ---------- 10. Pills ---------------------------------------------------- */
+
+.ll-pill {
+  display: inline-block;
+  padding: 2px 12px;
+  border-radius: var(--ll-radius-pill);
+  font-family: var(--ll-font-meta);
+  font-style: normal;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  line-height: 1.6;
+  background: var(--ll-pill-bg);
+  color: var(--ll-text);
+  white-space: nowrap;
+}
+.ll-pill--hot {
+  background: var(--ll-accent);
+  color: var(--ll-bg);
+  font-weight: 500;
+}
+.ll-pill--outline {
+  background: transparent;
+  border: 1.5px solid var(--ll-accent);
+  color: var(--ll-accent);
+  padding: 3px 14px;
+  font-size: 12px;
+  letter-spacing: 0.2em;
+}
+.ll-pill--pink {
+  background: var(--ll-accent-2-bg);
+  color: var(--ll-accent-2);
+  padding: 3px 12px;
+  font-size: 11px;
+}
+
+/* Tag string — IBM Plex mono, very muted */
+.ll-tags {
+  font-family: var(--ll-font-mono);
+  font-style: normal;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--ll-very-mute);
+  text-transform: uppercase;
+  margin-top: 10px;
+}
+
+/* ---------- 11. Plate placeholder --------------------------------------- */
+
+.ll-plate {
+  height: 60px;
+  border-radius: var(--ll-radius-sm);
+  background: var(--ll-surface-deep);
+  border: 1px solid var(--ll-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.ll-plate img { width: 100%; height: 100%; object-fit: cover; }
+.ll-plate__label {
+  font-family: var(--ll-font-meta);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ll-very-mute);
+}
+.ll-plate--lg  { height: 380px; }
+.ll-plate--md  { height: 200px; }
+.ll-plate--sm  { height: 56px; }
+
+/* Plate wrapped in a glow frame (used as project-page hero) */
+.ll-plate-frame {
+  padding: 12px;
+  background: var(--ll-surface);
+  border: 1px solid var(--ll-accent);
+  border-radius: var(--ll-radius-lg);
+  box-shadow: 0 0 32px -10px var(--ll-accent);
+}
+
+/* ---------- 12. Stat tile ----------------------------------------------- */
+
+.ll-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+@media (max-width: 720px) { .ll-stats { grid-template-columns: repeat(2, 1fr); } }
+
+.ll-stat {
+  padding: 14px;
+  text-align: center;
+  background: var(--ll-surface);
+  border: 1px solid var(--ll-border);
+  border-radius: var(--ll-radius-md);
+}
+.ll-stat__n {
+  font-family: var(--ll-font-display);
+  font-style: italic;
+  font-weight: 500;
+  font-size: clamp(32px, 4vw, 44px);
+  line-height: 1;
+  color: var(--ll-accent);
+}
+.ll-stat__l {
+  font-family: var(--ll-font-meta);
+  font-style: normal;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ll-mute);
+  margin-top: 8px;
+}
+
+/* ---------- 13. Project page layout ------------------------------------- */
+
+.ll-project {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 420px;
+  gap: 60px;
+  padding: 30px 0 60px;
+  align-items: start;
+}
+@media (max-width: 960px) {
+  .ll-project { grid-template-columns: 1fr; gap: 30px; }
+}
+
+.ll-project__lead { margin-top: 28px; }
+.ll-project__list {
+  font-family: var(--ll-font-body);
+  font-style: italic;
+  font-size: 18px;
+  line-height: 1.6;
+  padding-left: 22px;
+  margin: 8px 0 0;
+}
+.ll-project__list li::marker { color: var(--ll-mute); }
+
+.ll-mini-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+.ll-mini-grid > * { text-align: center; }
+
+/* ---------- 14. Section helpers ----------------------------------------- */
+
+.ll-section { padding: 30px 0; }
+
+.ll-row {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.ll-footer {
+  padding: 30px 0 22px;
+  text-align: center;
+  color: var(--ll-very-mute);
+  font-family: var(--ll-font-meta);
+  font-size: 11px;
+  letter-spacing: 0.36em;
+  text-transform: uppercase;
+}
+
+/* ---------- 15. Misc ---------------------------------------------------- */
+
+/* The inline accent highlight — used like a marker for short phrases.
+   "It works." gets wrapped in this. */
+.ll-highlight {
+  background: var(--ll-accent);
+  color: var(--ll-bg);
+  padding: 1px 10px;
+  border-radius: var(--ll-radius-pill);
+  font-style: normal;
+  font-family: inherit;
+}
+
+/* A small back-link used in the project page header */
+.ll-back {
+  font-family: var(--ll-font-display);
+  font-style: italic;
+  font-size: 17px;
+  color: var(--ll-mute);
+  border-bottom: none;
+}
+.ll-back:hover { color: var(--ll-accent); }

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lorelei Labs</title>
+<meta name="description" content="A small workshop, currently under construction.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Special+Elite&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/styles.css">
+<style>
+  /* page-specific: vertically center everything */
+  html, body { height: 100%; }
+  .ll-landing {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 60px var(--ll-page-pad-x);
+  }
+  .ll-landing__inner { max-width: 720px; width: 100%; }
+  .ll-landing .ll-wave-divider {
+    max-width: 560px;
+    margin: 36px auto 28px;
+  }
+  .ll-landing__construction {
+    font-family: var(--ll-font-meta);
+    font-style: normal;
+    font-size: clamp(11px, 1.2vw, 13px);
+    letter-spacing: 0.42em;
+    text-transform: uppercase;
+    color: var(--ll-mute);
+  }
+  .ll-landing__hint {
+    margin-top: 28px;
+    color: var(--ll-mute);
+  }
+</style>
+</head>
+<body>
+<div class="ll-page ll-landing">
+  <div class="ll-landing__inner">
+
+    <div class="ll-meta">· EST. 2026 ·</div>
+
+    <h1 class="ll-display-1" style="margin-top: 14px;">Lorelei Labs</h1>
+
+    <div class="ll-wave-divider"></div>
+
+    <div class="ll-landing__construction">· UNDER &nbsp;·&nbsp; CONSTRUCTION ·</div>
+
+    <p class="ll-lead ll-landing__hint">
+      a small workshop, currently being built. <br>
+      send word, if you'd like to know more.
+    </p>
+
+    <div style="margin-top: 22px;">
+      <a class="ll-pill ll-pill--outline" href="mailto:hello@lorelei-labs.com">→ HELLO@LORELEI-LABS.COM</a>
+    </div>
+
+  </div>
+</div>
+
+<script src="assets/components.js"></script>
+</body>
+</html>
